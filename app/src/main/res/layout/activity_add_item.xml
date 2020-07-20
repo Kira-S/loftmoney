@@ -1,33 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent">
-    <LinearLayout
-        android:layout_above="@+id/add_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="33dp"
-        android:paddingEnd="104dp"
-        android:layout_marginBottom="61dp"
-        android:orientation="vertical">
 
-    <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edittext_name_hint"/>
-    <EditText
+        android:layout_marginTop="112dp"
+        android:textColorHint="@color/addItem_hint_color"
+        android:textColor="@color/addItem_hint_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/etItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/edittext_price_hint"/>
-    </LinearLayout>
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:hint="@string/edittext_name_hint"
+        android:textColor="@color/addItem_text_color"
+        android:textColorHint="@color/addItem_hint_color"
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Молоко"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/addItem_hint_color"
+        android:textColor="@color/addItem_text_color"
+        app:layout_constraintTop_toBottomOf="@id/tilItem">
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/etPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:digits="0123456789."
+        android:hint="@string/edittext_price_hint"
+        android:inputType="number"
+        android:textColor="@color/addItem_text_color"
+        android:textColorHint="@color/addItem_hint_color"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@id/etItem"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/add_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:text="@string/add_button_title"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@null"/>
+        android:drawableStart="@drawable/ic_arrow_enable"
+        android:enabled="false"
+        android:textColor="@color/add_button_color_enable"
+        android:textSize="14sp"
+        android:background="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
