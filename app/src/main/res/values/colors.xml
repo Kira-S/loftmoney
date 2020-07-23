@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimary">#3574FA</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <!--<color name="colorAccent">#03DAC5</color> -->
     <color name="addItem_hint_color">#DBDBDB</color>
     <color name="addItem_text_color">#3574FA</color>
     <color name="add_button_color_enable">#7ED321</color>
     <color name="add_button_color_disable">#EAEAEA</color>
+    <color name="expenseColor">#4A90E2</color>
+    <color name="incomeColor">#7ED321</color>
+    <color name="divider_color">#EFEFEF</color>
+    <color name="call_item_activity_button">#ffc107</color>
+    <color name="call_item_activity_button_color">#FFFFFF</color>
 </resources>
