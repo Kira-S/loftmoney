@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">LoftMoney</string>
-    <string name="edittext_name_hint">Title</string>
-    <string name="edittext_price_hint">Price</string>
+    <string name="et_item_name_hint">Title</string>
+    <string name="et_price_hint">Price</string>
     <string name="add_button_title">Add</string>
+    <string name="expenses">Expences</string>
+    <string name="income">Income</string>
+    <string name="toast_added_success">Item was added successfully</string>
+    <string name="toast_added_fail">Item was not added</string>
 </resources>

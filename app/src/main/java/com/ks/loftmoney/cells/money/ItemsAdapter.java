@@ -77,6 +77,7 @@ public class ItemsAdapter extends RecyclerView.Adapter <ItemsAdapter.ItemViewHol
                     }
                 }
             });
+
             nameView.setText(itemModel.getName());
             valueView.setText(itemModel.getValue());
             valueView.setTextColor(ContextCompat.getColor(valueView.getContext(), itemModel.getColor()));

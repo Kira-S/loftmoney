@@ -1,6 +1,8 @@
 package com.ks.loftmoney;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +11,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
 public class BudgetActivity extends AppCompatActivity {
@@ -20,11 +23,23 @@ public class BudgetActivity extends AppCompatActivity {
 
         TabLayout tabLayout = findViewById(R.id.tabs);
 
-        ViewPager viewPager = findViewById(R.id.viewpager);
+        final ViewPager viewPager = findViewById(R.id.viewpager);
         viewPager.setAdapter(new BudgetPagerAdapter(getSupportFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(0).setText(R.string.expences);
+
+        FloatingActionButton fab = findViewById(R.id.call_add_item_activity_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final int activeFragmentIndex = viewPager.getCurrentItem();
+                Fragment activeFragment = getSupportFragmentManager().getFragments().get(activeFragmentIndex);
+                activeFragment.startActivityForResult(new Intent(BudgetActivity.this, AddItemActivity.class),
+                        BudgetFragment.REQUEST_CODE);
+            }
+        });
+
+        tabLayout.getTabAt(0).setText(R.string.expenses);
         tabLayout.getTabAt(1).setText(R.string.income);
     }
 
@@ -37,7 +52,13 @@ public class BudgetActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            return new BudgetFragment();
+            BudgetFragmentTags tag;
+            if(position == 0) {
+                tag = BudgetFragmentTags.EXPENSES;
+            } else {
+                tag = BudgetFragmentTags.INCOME;
+            }
+            return BudgetFragment.newInstance(tag);
         }
 
         @Override
