@@ -1,8 +1,12 @@
 <resources>
     <string name="app_name">LoftMoney</string>
-    <string name="edittext_name_hint">Название</string>
-    <string name="edittext_price_hint">Цена</string>
+    <string name="et_item_name_hint">Название</string>
+    <string name="et_price_hint">Цена</string>
     <string name="add_button_title">Добавить</string>
-    <string name="expences">Расходы</string>
+    <string name="expenses">Расходы</string>
     <string name="income">Доходы</string>
+    <string name="toast_added_success">Успешно добавлено</string>
+    <string name="toast_added_fail">Добавить не получилось</string>
+    <string name="activity_budget_toolbar_title" translatable="false">Учёт бюджета</string>
+    <string name="welcome_login" translatable="false">Войти</string>
 </resources>

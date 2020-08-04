@@ -10,8 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="112dp"
-        android:textColorHint="@color/addItem_hint_color"
-        android:textColor="@color/addItem_hint_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,9 +21,8 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="24dp"
-        android:hint="@string/edittext_name_hint"
+        android:hint="@string/et_item_name_hint"
         android:textColor="@color/addItem_text_color"
-        android:textColorHint="@color/addItem_hint_color"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="Молоко"/>
@@ -35,7 +32,6 @@
         android:id="@+id/tilPrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColorHint="@color/addItem_hint_color"
         android:textColor="@color/addItem_text_color"
         app:layout_constraintTop_toBottomOf="@id/tilItem">
 
@@ -47,26 +43,37 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:digits="0123456789."
-        android:hint="@string/edittext_price_hint"
+        android:hint="@string/et_price_hint"
         android:inputType="number"
         android:textColor="@color/addItem_text_color"
-        android:textColorHint="@color/addItem_hint_color"
         android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@id/etItem"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/add_button"
+    <TextView
+        android:id="@+id/loading_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        android:textSize="16sp"
+        android:text="Идет загрузка"
+        app:layout_constraintTop_toBottomOf="@id/tilPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="136dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="64dp"
         android:text="@string/add_button_title"
-        android:drawableStart="@drawable/ic_arrow_enable"
+        android:drawableStart="@drawable/check_selector"
         android:enabled="false"
-        android:textColor="@color/add_button_color_enable"
+        android:textColor="@color/add_button_text_color_selector"
         android:textSize="14sp"
         android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tilPrice"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 

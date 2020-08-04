@@ -1,14 +1,13 @@
 package com.ks.loftmoney;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +18,8 @@ public class AddItemActivity extends AppCompatActivity {
     private TextInputEditText etItem;
     private TextInputEditText etPrice;
     private Button btnAdd;
+    private TextView loadingView;
+
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -33,17 +34,19 @@ public class AddItemActivity extends AppCompatActivity {
 
             if (etItem.getText() != null && etItem.getText().toString().trim().length() > 0 && etPrice.getText() != null && etPrice.getText().toString().trim().length() > 0) {
                 btnAdd.setEnabled(true);
-                btnAdd.setTextColor(getApplicationContext().getResources().getColor(R.color.add_button_color_enable));
-                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_enable);
-                btnAdd.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
             } else {
                 btnAdd.setEnabled(false);
-                btnAdd.setTextColor(getApplicationContext().getResources().getColor(R.color.add_button_color_disable));
-                Drawable img = getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_disable);
-                btnAdd.setCompoundDrawablesWithIntrinsicBounds(img, null, null, null);
             }
         }
     };
+
+    private void setUI(boolean isLoading) {
+        etItem.setEnabled(!isLoading);
+        etPrice.setEnabled(!isLoading);
+        btnAdd.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        loadingView.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+    }
+
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class AddItemActivity extends AppCompatActivity {
         etItem = findViewById(R.id.etItem);
         etPrice = findViewById(R.id.etPrice);
         btnAdd = findViewById(R.id.add_button);
+        loadingView = findViewById(R.id.loading_view);
 
         etItem.addTextChangedListener(textWatcher);
         etPrice.addTextChangedListener(textWatcher);
@@ -62,15 +66,13 @@ public class AddItemActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = etItem.getText().toString();
                 String price = etPrice.getText().toString();
+                setUI(true);
 
                 if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(price)) {
                     setResult(RESULT_OK,
                             new Intent().putExtra("name", name).putExtra("price", price));
                     finish();
                 }
-
-//                Toast toast = Toast.makeText(getApplicationContext(), "Я могу нажать на кнопку", Toast.LENGTH_SHORT);
-//                toast.show();
             }
         });
     }
