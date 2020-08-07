@@ -34,6 +34,8 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import static android.app.Activity.RESULT_OK;
+
 public class BudgetFragment extends Fragment {
 
     public static final int REQUEST_CODE = 100;
@@ -111,45 +113,7 @@ public class BudgetFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        String token = (getActivity().getApplication()).getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN_KEY, "");
-
-        String name = data.getStringExtra("name");
-        String price = data.getStringExtra("price");
-        String type;
-        Integer color;
-
-        if (getArguments().getSerializable("type") == BudgetFragmentTags.EXPENSES) {
-            color = R.color.expenseColor;
-            type = "expense";
-        } else {
-            color = R.color.incomeColor;
-            type = "income";
-        }
-
-        compositeDisposable.add(((LoftApp) getActivity().getApplication()).getItemsApi().addBudget(token, name, price, type)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        //setUI(false);
-                        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                            itemsAdapter.addItem(new ItemModel(data.getStringExtra("name"), data.getStringExtra("price"), color));
-                        }
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_added_success,
-                                Toast.LENGTH_SHORT).show();
-                        //getActivity().finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        //setUI(false);
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_added_fail,
-                                Toast.LENGTH_SHORT).show();
-                        getActivity().finish();
-                    }
-                }));
+        loadItems();
     }
 
     private void loadItems() {
@@ -164,25 +128,25 @@ public class BudgetFragment extends Fragment {
         }
 
         Disposable disposable = ((LoftApp) getActivity().getApplication()).getItemsApi().getItems(token, type)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Consumer<List<Item>>() {
-                @Override
-                public void accept(List<Item> items) throws Exception {
-                    swipeRefreshLayout.setRefreshing(false);
-                    for (Item item : items) {
-                        itemModels.add(ItemModel.getInstance(item));
-                    }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Item>>() {
+                    @Override
+                    public void accept(List<Item> items) throws Exception {
+                        swipeRefreshLayout.setRefreshing(false);
+                        for (Item item : items) {
+                            itemModels.add(ItemModel.getInstance(item));
+                        }
 
-                    itemsAdapter.setData(itemModels);
-                }
-            }, new Consumer<Throwable>() {
-                @Override
-                public void accept(Throwable throwable) throws Exception {
-                    swipeRefreshLayout.setRefreshing(false);
-                    Log.e("TAG", "Error " + throwable);
-                }
-            });
+                        itemsAdapter.setData(itemModels);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.e("TAG", "Error " + throwable);
+                    }
+                });
 
         compositeDisposable.add(disposable);
     }

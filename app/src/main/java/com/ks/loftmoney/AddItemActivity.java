@@ -1,5 +1,6 @@
 package com.ks.loftmoney;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,11 +9,18 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.ks.loftmoney.cells.money.ItemModel;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Action;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class AddItemActivity extends AppCompatActivity {
     private TextInputEditText etItem;
@@ -62,17 +70,29 @@ public class AddItemActivity extends AppCompatActivity {
         etPrice.addTextChangedListener(textWatcher);
 
         btnAdd.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("CheckResult")
             @Override
             public void onClick(View v) {
                 String name = etItem.getText().toString();
                 String price = etPrice.getText().toString();
-                setUI(true);
+                String type;
 
-                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(price)) {
-                    setResult(RESULT_OK,
-                            new Intent().putExtra("name", name).putExtra("price", price));
-                    finish();
+                String token = (getApplication()).getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN_KEY, "");
+
+                if (getIntent().getSerializableExtra("tag") == BudgetFragmentTags.EXPENSES) {
+                    type = "expense";
+                } else {
+                    type = "income";
                 }
+
+                ((LoftApp) getApplication()).getItemsApi().addBudget(token, name, price, type)
+                        .subscribeOn(Schedulers.computation())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(() -> {
+                            setResult(RESULT_OK);
+                            finish();
+                        }, throwable -> {
+                        });
             }
         });
     }

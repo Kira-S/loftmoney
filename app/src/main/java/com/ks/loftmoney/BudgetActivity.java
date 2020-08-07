@@ -33,8 +33,14 @@ public class BudgetActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 final int activeFragmentIndex = viewPager.getCurrentItem();
+                BudgetFragmentTags tag;
+                if (activeFragmentIndex == 0) {
+                    tag = BudgetFragmentTags.EXPENSES;
+                } else {
+                    tag = BudgetFragmentTags.INCOME;
+                }
                 Fragment activeFragment = getSupportFragmentManager().getFragments().get(activeFragmentIndex);
-                activeFragment.startActivityForResult(new Intent(BudgetActivity.this, AddItemActivity.class),
+                activeFragment.startActivityForResult(new Intent(BudgetActivity.this, AddItemActivity.class).putExtra("tag", tag),
                         BudgetFragment.REQUEST_CODE);
             }
         });
@@ -53,7 +59,7 @@ public class BudgetActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             BudgetFragmentTags tag;
-            if(position == 0) {
+            if (position == 0) {
                 tag = BudgetFragmentTags.EXPENSES;
             } else {
                 tag = BudgetFragmentTags.INCOME;
