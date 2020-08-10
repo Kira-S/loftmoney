@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+    android:id="@+id/txtBalanceTotal"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/balance_total_title"
+    android:textSize="14sp"
+    android:fontFamily="sans-serif-light"
+    android:textColor="@color/basic_text_color"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    android:layout_marginTop="40dp"
+    android:layout_marginStart="24dp"/>
+
+    <TextView
+        android:id="@+id/txtBalanceTotalValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="67000₽"
+        android:textSize="48sp"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/orange"
+        app:layout_constraintStart_toStartOf="@id/txtBalanceTotal"
+        app:layout_constraintTop_toBottomOf="@id/txtBalanceTotal"
+        />
+
+    <LinearLayout
+        android:id="@+id/llExpenses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/txtBalanceTotalValue"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/llIncomes">
+
+        <TextView
+            android:id="@+id/txtBalanceExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/expense"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/basic_text_color"/>
+        <TextView
+            android:id="@+id/txtBalanceExpensesValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="5400₽"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/expenseColor"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llIncomes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        app:layout_constraintTop_toBottomOf="@id/txtBalanceTotalValue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/llExpenses">
+
+        <TextView
+            android:id="@+id/txtBalanceIncomes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/income_sing"
+            android:textSize="10sp"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/basic_text_color"/>
+
+        <TextView
+            android:id="@+id/txtBalanceIncomesValue"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="74000₽"
+            android:textSize="24sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/incomeColor"/>
+    </LinearLayout>
+
+    <com.ks.loftmoney.BalanceView
+        android:id="@+id/balanceDiagram"
+        android:layout_width="184dp"
+        android:layout_height="176dp"
+        android:layout_marginTop="36dp"
+        app:layout_constraintTop_toBottomOf="@id/llExpenses"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

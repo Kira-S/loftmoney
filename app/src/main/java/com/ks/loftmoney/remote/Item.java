@@ -9,9 +9,7 @@ public class Item {
     @SerializedName("type") private String itemType;
     @SerializedName("date") private String itemDate;
 
-    public String getItemId() {
-        return itemId;
-    }
+    public String getItemId() { return itemId; }
 
     public String getItemName() {
         return itemName;

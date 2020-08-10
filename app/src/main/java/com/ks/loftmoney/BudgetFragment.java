@@ -1,10 +1,16 @@
 package com.ks.loftmoney;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -20,9 +26,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.ks.loftmoney.cells.money.ItemModel;
 import com.ks.loftmoney.cells.money.ItemsAdapter;
-import com.ks.loftmoney.cells.money.ItemsAdapterClick;
+import com.ks.loftmoney.cells.money.ItemsAdapterListener;
 import com.ks.loftmoney.remote.Item;
-import com.ks.loftmoney.remote.ItemsApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +39,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class BudgetFragment extends Fragment {
+public class BudgetFragment extends Fragment implements ItemsAdapterListener, ActionMode.Callback {
 
     public static final int REQUEST_CODE = 100;
     private RecyclerView recyclerView;
@@ -42,6 +47,7 @@ public class BudgetFragment extends Fragment {
     private FloatingActionButton fab;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ActionMode mActionMode;
 
     @Nullable
     @Override
@@ -70,14 +76,15 @@ public class BudgetFragment extends Fragment {
         });
 
         itemsAdapter = new ItemsAdapter();
-//        itemsAdapter.setItemsAdapterClick(new ItemsAdapterClick() {
+//        itemsAdapter.setItemsAdapterListener(new ItemsAdapterListener() {
 //            @Override
-//            public void onMoneyClick(ItemModel itemModel) {
+//            public void onItemClick(ItemModel itemModel) {
 //                Intent intent = new Intent(getActivity(), AddItemActivity.class);
 //                startActivity(intent);
 //            }
 //        });
 
+        itemsAdapter.setListener(this);
         recyclerView.setAdapter(itemsAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
                 LinearLayoutManager.VERTICAL, false));
@@ -111,45 +118,20 @@ public class BudgetFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        loadItems();
 
-        String token = (getActivity().getApplication()).getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN_KEY, "");
-
-        String name = data.getStringExtra("name");
-        String price = data.getStringExtra("price");
-        String type;
         Integer color;
 
         if (getArguments().getSerializable("type") == BudgetFragmentTags.EXPENSES) {
             color = R.color.expenseColor;
-            type = "expense";
         } else {
             color = R.color.incomeColor;
-            type = "income";
         }
 
-        compositeDisposable.add(((LoftApp) getActivity().getApplication()).getItemsApi().addBudget(token, name, price, type)
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        //setUI(false);
-                        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-                            itemsAdapter.addItem(new ItemModel(data.getStringExtra("name"), data.getStringExtra("price"), color));
-                        }
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_added_success,
-                                Toast.LENGTH_SHORT).show();
-                        //getActivity().finish();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        //setUI(false);
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.toast_added_fail,
-                                Toast.LENGTH_SHORT).show();
-                        getActivity().finish();
-                    }
-                }));
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            itemsAdapter.addItem(new ItemModel("", data.getStringExtra("name"), data.getStringExtra("price"), color));
+            loadItems();
+        }
     }
 
     private void loadItems() {
@@ -164,26 +146,105 @@ public class BudgetFragment extends Fragment {
         }
 
         Disposable disposable = ((LoftApp) getActivity().getApplication()).getItemsApi().getItems(token, type)
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Consumer<List<Item>>() {
-                @Override
-                public void accept(List<Item> items) throws Exception {
-                    swipeRefreshLayout.setRefreshing(false);
-                    for (Item item : items) {
-                        itemModels.add(ItemModel.getInstance(item));
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Item>>() {
+                    @Override
+                    public void accept(List<Item> items) throws Exception {
+                        swipeRefreshLayout.setRefreshing(false);
+                        for (Item item : items) {
+                            itemModels.add(ItemModel.getInstance(item));
+                        }
+                        itemsAdapter.setData(itemModels);
                     }
-
-                    itemsAdapter.setData(itemModels);
-                }
-            }, new Consumer<Throwable>() {
-                @Override
-                public void accept(Throwable throwable) throws Exception {
-                    swipeRefreshLayout.setRefreshing(false);
-                    Log.e("TAG", "Error " + throwable);
-                }
-            });
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.e("TAG", "Error " + throwable);
+                    }
+                });
 
         compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void onItemClick(final ItemModel itemModel, final int position) {
+        itemsAdapter.clearItem(position);
+        if (mActionMode != null) {
+            mActionMode.setTitle(getString(R.string.selected, String.valueOf(itemsAdapter.getSelectedSize())));
+        }
+    }
+
+    @Override
+    public void onItemLongClick(ItemModel itemModel, int position) {
+        if (mActionMode == null) {
+            getActivity().startActionMode(this);
+        }
+        itemsAdapter.toggleItem(position);
+        if (mActionMode != null) {
+            mActionMode.setTitle(getString(R.string.selected, String.valueOf(itemsAdapter.getSelectedSize())));
+        }
+    }
+
+    @Override
+    public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
+        mActionMode = actionMode;
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareActionMode(ActionMode actionMode, Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(getActivity());
+        menuInflater.inflate(R.menu.menu_delete, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
+        if(menuItem.getItemId() == R.id.remove) {
+            new AlertDialog.Builder(getContext())
+                    .setMessage(R.string.confirmation)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            removeItems();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+
+                        }
+                    }).show();
+        }
+        return true;
+    }
+
+    private void removeItems() {
+        String token = (getActivity().getApplication()).getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN_KEY, "");
+        List<String> selectedItems = itemsAdapter.getSelectedItemIds();
+        for (String itemId : selectedItems) {
+            compositeDisposable.delete(((LoftApp) getActivity().getApplication()).getItemsApi().removeItem(String.valueOf(itemId), token)
+                    .subscribeOn(Schedulers.computation())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Action() {
+                        @Override
+                        public void run() throws Exception {
+                            loadItems();
+                            itemsAdapter.clearSelections();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    }));;
+        }
+    }
+
+    @Override
+    public void onDestroyActionMode(ActionMode actionMode) {
+        mActionMode = null;
+        itemsAdapter.clearSelections();
     }
 }
