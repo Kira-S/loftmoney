@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3574FA</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#ffc107</color>
+    <color name="basic_text_color">#666664</color>
     <color name="addItem_text_color">#3574FA</color>
     <color name="add_button_color_enable">#7ED321</color>
     <color name="add_button_color_disable">#EAEAEA</color>
@@ -11,4 +12,7 @@
     <color name="divider_color">#EFEFEF</color>
     <color name="call_item_activity_button_color">#FFFFFF</color>
     <color name="colorInactive">#b38baaef</color>
+    <color name="dark_gray_blue">#333f59</color>
+    <color name="action_item_background">#f2f2f2</color>
+    <color name="orange">#ff9e57</color>
 </resources>

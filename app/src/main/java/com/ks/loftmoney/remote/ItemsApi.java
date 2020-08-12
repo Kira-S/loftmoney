@@ -21,4 +21,7 @@ public interface ItemsApi {
                           @Field("name") String price,
                           @Field("price") String name,
                           @Field("type") String type);
+
+    @POST("./items/remove")
+    Completable removeItem(@Query("id") String id, @Query("auth-token") String token);
 }

@@ -9,4 +9,11 @@
     <string name="toast_added_fail">Добавить не получилось</string>
     <string name="activity_budget_toolbar_title" translatable="false">Учёт бюджета</string>
     <string name="welcome_login" translatable="false">Войти</string>
+    <string name="selected" translatable="false">Выделено: %1$s</string>
+    <string name="remove" translatable="false">Удалить</string>
+    <string name="confirmation" translatable="false">Вы действительно хотите удалить выбранные позиции?</string>
+    <string name="balance_total_title" translatable="false">Доступные финансы</string>
+    <string name="expense">Расход</string>
+    <string name="income_sing">Доход</string>
+    <string name="balance">Баланс</string>
 </resources>
