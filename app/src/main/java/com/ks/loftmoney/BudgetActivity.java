@@ -21,7 +21,7 @@ public class BudgetActivity extends AppCompatActivity {
 
     private TabLayout tabLayout;
     private Toolbar toolbar;
-    //private ViewPager viewPager;
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +35,41 @@ public class BudgetActivity extends AppCompatActivity {
         viewPager.setAdapter(new BudgetPagerAdapter(getSupportFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT));
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        FloatingActionButton fab = findViewById(R.id.call_add_item_activity_button);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //в зависимости от позиции скрыть или показать fab
+                if(position == 2) {
+                   fab.hide();
+                } else {
+                    fab.show();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        fab = findViewById(R.id.call_add_item_activity_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final int activeFragmentIndex = viewPager.getCurrentItem();
+                BudgetFragmentTags tag;
+                if (activeFragmentIndex == 0) {
+                    tag = BudgetFragmentTags.EXPENSES;
+                } else {
+                    tag = BudgetFragmentTags.INCOME;
+                }
                 Fragment activeFragment = getSupportFragmentManager().getFragments().get(activeFragmentIndex);
-                activeFragment.startActivityForResult(new Intent(BudgetActivity.this, AddItemActivity.class),
+                activeFragment.startActivityForResult(new Intent(BudgetActivity.this, AddItemActivity.class).putExtra("tag", tag),
                         BudgetFragment.REQUEST_CODE);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
@@ -51,12 +78,8 @@ public class BudgetActivity extends AppCompatActivity {
         tabLayout.getTabAt(0).setText(R.string.expenses);
         tabLayout.getTabAt(1).setText(R.string.income);
         tabLayout.getTabAt(2).setText(R.string.balance);
-//
-//        if(tabLayout.getSelectedTabPosition() == 2) {
-////        if (getSupportFragmentManager().getFragment().getArguments().getSerializable("type") == BudgetFragmentTags.EXPENSES) {
-//            new  BalanceFragment();
-//        }
     }
+
 
     @Override
     public void onActionModeStarted(android.view.ActionMode mode) {
@@ -78,25 +101,18 @@ public class BudgetActivity extends AppCompatActivity {
             super(fm, behavior);
         }
 
-//        if(getCurrentItem()) == 2) {
-//            new BalanceFragment();
-//        }
-
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            BudgetFragmentTags tag;
             if(position == 0) {
-                tag = BudgetFragmentTags.EXPENSES;
-//                fragment = BudgetFragment.newInstance(BudgetFragmentTags.EXPENSES);
+                return BudgetFragment.newInstance(BudgetFragmentTags.EXPENSES);
             } else if(position == 1) {
-                tag = BudgetFragmentTags.INCOME;
-//                fragment = BudgetFragment.newInstance(BudgetFragmentTags.INCOME);
+                return BudgetFragment.newInstance(BudgetFragmentTags.INCOME);
+            } else if(position == 2) {
+               return BalanceFragment.newInstance();
             } else {
-                tag = BudgetFragmentTags.BALANCE;
-               // fragment = new BalanceFragment();
+                return null;
             }
-            return BudgetFragment.newInstance(tag);
         }
 
         @Override
