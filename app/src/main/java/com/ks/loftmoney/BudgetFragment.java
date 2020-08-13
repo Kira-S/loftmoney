@@ -76,13 +76,6 @@ public class BudgetFragment extends Fragment implements ItemsAdapterListener, Ac
         });
 
         itemsAdapter = new ItemsAdapter();
-//        itemsAdapter.setItemsAdapterListener(new ItemsAdapterListener() {
-//            @Override
-//            public void onItemClick(ItemModel itemModel) {
-//                Intent intent = new Intent(getActivity(), AddItemActivity.class);
-//                startActivity(intent);
-//            }
-//        });
 
         itemsAdapter.setListener(this);
         recyclerView.setAdapter(itemsAdapter);
@@ -134,7 +127,7 @@ public class BudgetFragment extends Fragment implements ItemsAdapterListener, Ac
         }
     }
 
-    private void loadItems() {
+    public void loadItems() {
         final List<ItemModel> itemModels = new ArrayList<>();
         String token = (getActivity().getApplication()).getSharedPreferences(getString(R.string.app_name), 0).getString(LoftApp.TOKEN_KEY, "");
 

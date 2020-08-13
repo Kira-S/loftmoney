@@ -13,8 +13,8 @@ public class BalanceView extends View {
 
    private float expenses;
    private float incomes;
-   private Paint expensePaint;
-   private Paint incomePaint;
+   private Paint expensePaint = new Paint();
+   private Paint incomePaint = new Paint();
 
     public BalanceView(Context context) {
         super(context);

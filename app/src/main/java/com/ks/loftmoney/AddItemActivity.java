@@ -95,12 +95,6 @@ public class AddItemActivity extends AppCompatActivity {
                             @Override
                             public void run() throws Exception {
                                 setUI(false);
-//                                if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(price)) {
-//                                    setResult(RESULT_OK,
-//                                    new Intent().putExtra("name", name).putExtra("price", price));
-//                                finish();
-//                                }
-
                                 Toast.makeText(getApplicationContext(), R.string.toast_added_success,
                                         Toast.LENGTH_SHORT).show();
                                 finish();

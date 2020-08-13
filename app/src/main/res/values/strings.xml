@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">LoftMoney</string>
     <string name="et_item_name_hint">Название</string>
     <string name="et_price_hint">Цена</string>
     <string name="add_button_title">Добавить</string>
@@ -13,7 +12,7 @@
     <string name="remove" translatable="false">Удалить</string>
     <string name="confirmation" translatable="false">Вы действительно хотите удалить выбранные позиции?</string>
     <string name="balance_total_title" translatable="false">Доступные финансы</string>
-    <string name="expense">Расход</string>
-    <string name="income_sing">Доход</string>
-    <string name="balance">Баланс</string>
+    <string name="expense" translatable="false">Расход</string>
+    <string name="income_sing" translatable="false">Доход</string>
+    <string name="balance" translatable="false">Баланс</string>
 </resources>
